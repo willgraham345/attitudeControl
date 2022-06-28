@@ -34,7 +34,7 @@ Gamma = np.array([[cT, cT, cT, cT], [0, d*cT, 0, -d*cT],
 theta = 10.0
 
 psi = 20.0
-phi = 70.0
+phi = 70.0Z
 del_theta = 0
 del_phi = 0
 
