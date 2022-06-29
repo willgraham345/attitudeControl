@@ -2,23 +2,23 @@ import matplotlib.pyplot as plt
 import numpy as np
 class flightObject:
     def __init__(self):
-        self.xVals = [];
-        self.yVals = [];
-        self.zVals = [];
+        self.x = [];
+        self.y = [];
+        self.z = [];
         self.roll = [];
         self.pitch = [];
         self.yaw = [];
         self.frame = [];
         self.time = [];
     def addVals(self, X,Y,Z,roll,pitch,yaw, frame, time):
-        self.xVals.append(X)
-        self.yVals.append(Y)
-        self.ZVals.append(Z)
-        self.rollVals.append(roll)
-        self.pitchVals.append(pitch)
-        self.yawVals.append(yaw)
-        self.frameVals.append(frame)
-        self.tVals.append(time)
+        self.x.append(X)
+        self.y.append(Y)
+        self.z.append(Z)
+        self.roll.append(roll)
+        self.pitch.append(pitch)
+        self.yaw.append(yaw)
+        self.frame.append(frame)
+        self.time.append(time)
     def graphVals(self):
         fig, axs = plt.subplots(2,3)
         axs[0,0].plot(tVals,xVals)

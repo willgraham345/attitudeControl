@@ -55,24 +55,9 @@ R_BtoA = np.transpose(R_AtoB)
 angularVelocity = np.transpose([0, 0, 0])
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 if __name__ == '__main__':
-    # from __future__ import print_function
-    from vicon_dssdk import ViconDataStream
-
     client = ViconDataStream.RetimingClient()
-
+    cf1 = flightObject()
     try:
         client.Connect("localhost:801")
 
@@ -85,23 +70,22 @@ if __name__ == '__main__':
         print('X Axis', xAxis, 'Y Axis', yAxis, 'Z Axis', zAxis)
         while (True):
             try:
-                client.UpdateFrame()
-                print('1')
+                frame = client.UpdateFrame()
                 subjectNames = client.GetSubjectNames()
-                print('2')
                 for subjectName in subjectNames:
                     segmentNames = client.GetSegmentNames(subjectName)
                     for segmentName in segmentNames:
-                        rpy = client.GetSegmentGlobalRotationEulerXYZ(subjectName, segmentName)
-                        XYZ = client.GetSegmentGlobalTranslation(subjectName, segmentName)
-                        q1q2q3 = client.GetSegmentGlobalRotationQuaternion(subjectName, segmentName)
-                        print('roll pitch yaw', rpy)
-                        print('XYZ', XYZ )
-                        print('quaternion', q1q2q3)
+                        [(roll, pitch, yaw), occlusion1] = client.GetSegmentGlobalRotationEulerXYZ(subjectName, segmentName)
+                        [(X,Y,Z), occlusion2] = client.GetSegmentGlobalTranslation(subjectName, segmentName)
+                        [(q_x, q_y, q_z, q_w), occlusion3] = client.GetSegmentGlobalRotationQuaternion(subjectName, segmentName)
+                        # print(X, Y, Z, occlusion2)
+                        # print(q_x, q_y, q_z, q_w, occlusion3)
+                        time = 0
+                        cf1.addVals(X,Y,Z,roll,pitch,yaw, frame, time)
+                        print('Added')
+
 
             except ViconDataStream.DataStreamException as e:
-                print('Nested Try')
-                print('Handled data stream error')
+                print('Handled data stream error (Nested)... ERROR:', e)
     except ViconDataStream.DataStreamException as e:
-        print('Global Try')
-        print('Handled data stream error', e)
+        print('Handled data stream error (Global)... ERROR:', e)
