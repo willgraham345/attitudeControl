@@ -1,5 +1,5 @@
 https://www.meccanismocomplesso.org/en/hamiltons-quaternions-and-3d-rotation-with-python/
-Details how to change from Rotation matrix to quaternions
+Details how to change from Rotation matrix to quaternions (this actually might be the most helpful)
 
 Really good stack overflow about making a quaternion class
 https://stackoverflow.com/questions/4870393/rotating-coordinate-system-via-a-quaternion
@@ -7,3 +7,6 @@ https://stackoverflow.com/questions/4870393/rotating-coordinate-system-via-a-qua
 
 really good stack overflow referenced quaternion class
 https://stackoverflow.com/questions/4870393/rotating-coordinate-system-via-a-quaternion/42180896#42180896
+
+Might be a helpful library from python
+https://quaternion.readthedocs.io/en/latest/

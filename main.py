@@ -1,8 +1,9 @@
 # This is a sample Python script.
-import numpy as np
-import matplotlib.pyplot as plt
 from __future__ import print_function
 from vicon_dssdk import ViconDataStream
+import argparse
+import numpy as np
+from flightObject import flightObject
 import time
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
@@ -34,7 +35,7 @@ Gamma = np.array([[cT, cT, cT, cT], [0, d*cT, 0, -d*cT],
 theta = 10.0
 
 psi = 20.0
-phi = 70.0Z
+phi = 70.0
 del_theta = 0
 del_phi = 0
 
@@ -53,18 +54,54 @@ R_BtoA = np.transpose(R_AtoB)
 
 angularVelocity = np.transpose([0, 0, 0])
 
-# Press the green button in the gutter to run the script.
+
+
+
+
+
+
+
+
+
+
+
+
+
 if __name__ == '__main__':
-    client = ViconDataStream.Client()
-    frames = []
-    print('Connecting')
-    while not client.IsConnected():
-        print('.')
-        client.Connect('localhost:801')
+    # from __future__ import print_function
+    from vicon_dssdk import ViconDataStream
+
+    client = ViconDataStream.RetimingClient()
+
+    try:
+        client.Connect("localhost:801")
+
         # Check the version
         print('Version', client.GetVersion())
+
+        client.SetAxisMapping(ViconDataStream.Client.AxisMapping.EForward, ViconDataStream.Client.AxisMapping.ELeft,
+                              ViconDataStream.Client.AxisMapping.EUp)
         xAxis, yAxis, zAxis = client.GetAxisMapping()
         print('X Axis', xAxis, 'Y Axis', yAxis, 'Z Axis', zAxis)
-    while client.IsConnected():
-        xAxis, yAxis, zAxis = client.GetAxisMapping()
-        print('X Axis', xAxis, 'Y Axis', yAxis, 'Z Axis', zAxis)
+        while (True):
+            try:
+                client.UpdateFrame()
+                print('1')
+                subjectNames = client.GetSubjectNames()
+                print('2')
+                for subjectName in subjectNames:
+                    segmentNames = client.GetSegmentNames(subjectName)
+                    for segmentName in segmentNames:
+                        rpy = client.GetSegmentGlobalRotationEulerXYZ(subjectName, segmentName)
+                        XYZ = client.GetSegmentGlobalTranslation(subjectName, segmentName)
+                        q1q2q3 = client.GetSegmentGlobalRotationQuaternion(subjectName, segmentName)
+                        print('roll pitch yaw', rpy)
+                        print('XYZ', XYZ )
+                        print('quaternion', q1q2q3)
+
+            except ViconDataStream.DataStreamException as e:
+                print('Nested Try')
+                print('Handled data stream error')
+    except ViconDataStream.DataStreamException as e:
+        print('Global Try')
+        print('Handled data stream error', e)
