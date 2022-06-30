@@ -1,12 +1,9 @@
 # This is a sample Python script.
 from __future__ import print_function
 from vicon_dssdk import ViconDataStream
-import argparse
 import numpy as np
 from flightObject import flightObject
 import time
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
 
 # Load constants
 g = 9.81 # [m/s**2]
@@ -54,38 +51,51 @@ R_BtoA = np.transpose(R_AtoB)
 
 angularVelocity = np.transpose([0, 0, 0])
 
-
+t_duration = 5;
+orientationMode = 'euler'
 if __name__ == '__main__':
+    # Create instance of python objects, and custom flightobject stuff
     client = ViconDataStream.RetimingClient()
-    cf1 = flightObject()
+    cf1 = flightObject(orientationMode)
     try:
         client.Connect("localhost:801")
-
+        print("Vicon is connected...", client.IsConnected())
         # Check the version
-        print('Version', client.GetVersion())
-
+        print('Version #: ', client.GetVersion())
         client.SetAxisMapping(ViconDataStream.Client.AxisMapping.EForward, ViconDataStream.Client.AxisMapping.ELeft,
                               ViconDataStream.Client.AxisMapping.EUp)
-        xAxis, yAxis, zAxis = client.GetAxisMapping()
+        xAxis, yAxis, zAxis = client .GetAxisMapping()
         print('X Axis', xAxis, 'Y Axis', yAxis, 'Z Axis', zAxis)
-        while (True):
+        t_begin = time.time()
+        while(time.time() < t_begin + t_duration):
+            t_current = time.time()
+            print('current time = ', t_current)
             try:
                 frame = client.UpdateFrame()
+                print('frame = ', frame)
                 subjectNames = client.GetSubjectNames()
                 for subjectName in subjectNames:
                     segmentNames = client.GetSegmentNames(subjectName)
                     for segmentName in segmentNames:
-                        [(roll, pitch, yaw), occlusion1] = client.GetSegmentGlobalRotationEulerXYZ(subjectName, segmentName)
-                        [(X,Y,Z), occlusion2] = client.GetSegmentGlobalTranslation(subjectName, segmentName)
-                        [(q_x, q_y, q_z, q_w), occlusion3] = client.GetSegmentGlobalRotationQuaternion(subjectName, segmentName)
-                        # print(X, Y, Z, occlusion2)
-                        # print(q_x, q_y, q_z, q_w, occlusion3)
-                        time = 0
-                        cf1.addVals(X,Y,Z,roll,pitch,yaw, frame, time)
+
+                        if orientationMode == 'euler':
+                            [(X,Y,Z), occlusion2] = client.GetSegmentGlobalTranslation(subjectName, segmentName)
+                            [(roll, pitch, yaw), occlusion1] = client.GetSegmentGlobalRotationEulerXYZ(subjectName,
+                                                                                                       segmentName)
+                            XYZ = (X, Y, Z)
+                            pose = (roll, pitch, yaw)
+                        elif orientationMode == 'quaternion':
+                            [(X,Y,Z), occlusion2] = client.GetSegmentGlobalTranslation(subjectName, segmentName)
+                            [(q_x, q_y, q_z, q_w), occlusion3] = client.GetSegmentGlobalRotationQuaternion(subjectName, segmentName)
+                            XYZ = (X, Y, Z)
+                            pose = (roll, pitch, yaw)
+
+                        cf1.addVals(XYZ,pose, frame, t_current-t_begin)
                         print('Added')
 
 
             except ViconDataStream.DataStreamException as e:
                 print('Handled data stream error (Nested)... ERROR:', e)
+        cf1.graphVals()
     except ViconDataStream.DataStreamException as e:
         print('Handled data stream error (Global)... ERROR:', e)
