@@ -13,6 +13,9 @@ class flightObject:
         self.roll = []
         self.pitch = []
         self.yaw = []
+        self.omega_roll = []
+        self.omega_pitch = []
+        self.omega_yaw = []
         self.qx = []
         self.qy = []
         self.qz = []
@@ -23,21 +26,36 @@ class flightObject:
         self.M2 = 0.0
         self.M3 = 0.0
         self.M4 = 0.0
+        self.desOrientation = []
         if (type(orientationMode) != str):
             raise('orientationMode must be a string (either quaternion or euler)')
         self.orientationMode = orientationMode
-    def addPoseVals(self, XYZ, orientation, frame, t):
+        for i in range(0,2):
+            self.x.append(0.0)
+            self.y.append(0.0)
+            self.z.append(0.0)
+            self.roll.append(0.0)
+            self.pitch.append(0.0)
+            self.yaw.append(0.0)
+            self.omega_roll.append(0.0)
+            self.omega_pitch.append(0.0)
+            self.omega_yaw.append(0.0)
+            self.t.append(0.0)
+            # self.qx.append(0.0) NEEDS SUPPORT FOR QUATERNIONS
+
+
+    def addPoseVals(self, XYZ, orientation, frame, timeVal):
         X, Y, Z = XYZ
         self.x.append(X)
         self.y.append(Y)
         self.z.append(Z)
         if (self.orientationMode == 'euler'):
-            roll, pitch, yaw = pose
+            roll, pitch, yaw = orientation
             self.roll.append(roll)
             self.pitch.append(pitch)
             self.yaw.append(yaw)
         elif(self.orientationMode == 'quaternion'):
-            qx, qy, qz, qw = pose
+            qx, qy, qz, qw = orientation
             self.qx.append(qx)
             self.qy.append(qy)
             self.qz.append(qz)
@@ -45,7 +63,10 @@ class flightObject:
         else:
             raise('Errors with orientationMode entry')
         self.frame.append(frame)
-        self.t.append(t)
+        timeStep = timeVal - self.t[-1]
+        self.t.append(timeStep)
+        self.omega_pitch.append((self.pitch[-1] - self.pitch[-2]) / timeStep)
+        print('pitch Velocity', ((self.pitch[-1] - self.pitch[-2]) / timeStep) )
 
 
     def graphPoseVals(self):
@@ -82,5 +103,37 @@ class flightObject:
             axs[1, 2].set_ylabel('displacement (rad)')
         elif(self.orientationMode == 'quaternion'):
             print("visualization for quaternions not yet supported (or understood) by our good friend Will")
+        # for i in range(len(self.t)):
+        #     samplingRate[i] = self.t(i) - self.t(i)
 
+        # plt.show()
+        fig2, ax2 = plt.subplots()
+        ax2.plot(self.t, self.t)
+        ax2.set_title('Sampling Rate vs Time')
+        ax2.set_xlabel('Time')
+        ax2.set_ylabel('Sampling Rate')
+
+
+        fig3 = plt.figure()
+        ax3 = fig3.gca(projection = '3d')
+        ax3.set_xlabel('x [mm]')
+        ax3.set_ylabel('y [mm]')
+        ax3.set_zlabel('z [mm]')
+        ax3.plot(self.x, self.y, self.z)
         plt.show()
+
+
+
+
+
+    def attitudeControl(self, obs_Orientation, desOrientation, timeStep, gainVals):
+        deltaT = self.t[-1] - self.t[-2]
+        omega = obs_orientation
+        [Kp, Kd, Ki] = gainVals
+        [roll_obs, pitch_obs, yaw_obs] = obs_Orientation
+        [roll_des, pitch_des, yaw_des] = desOrientation
+        Tx_des = Kp* (roll_des - roll_obs) + Kd*(0)
+        Ty_des = Kp*(pitch_des - pitch_obs)
+        return Tx_des, Ty_des, Tz_des, T_sum
+
+

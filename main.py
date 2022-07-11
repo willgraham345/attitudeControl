@@ -69,7 +69,6 @@ if __name__ == '__main__':
         t_begin = time.time()
         while(time.time() < t_begin + t_duration):
             t_current = time.time()
-            print('current time = ', t_current)
             try:
                 frame = client.UpdateFrame()
                 print('frame = ', frame)
@@ -77,25 +76,30 @@ if __name__ == '__main__':
                 for subjectName in subjectNames:
                     segmentNames = client.GetSegmentNames(subjectName)
                     for segmentName in segmentNames:
+                        print('current time = ', t_current)
 
                         if orientationMode == 'euler':
                             [(X,Y,Z), occlusion2] = client.GetSegmentGlobalTranslation(subjectName, segmentName)
                             [(roll, pitch, yaw), occlusion1] = client.GetSegmentGlobalRotationEulerXYZ(subjectName,
                                                                                                        segmentName)
                             XYZ = (X, Y, Z)
-                            pose = (roll, pitch, yaw)
+                            orientation = (roll, pitch, yaw)
                         elif orientationMode == 'quaternion':
                             [(X,Y,Z), occlusion2] = client.GetSegmentGlobalTranslation(subjectName, segmentName)
                             [(q_x, q_y, q_z, q_w), occlusion3] = client.GetSegmentGlobalRotationQuaternion(subjectName, segmentName)
                             XYZ = (X, Y, Z)
-                            pose = (roll, pitch, yaw)
-
-                        cf1.addVals(XYZ,pose, frame, t_current-t_begin)
+                            orientation = (roll, pitch, yaw)
+                        t_current = time.time()
+                        cf1.addPoseVals(XYZ, orientation, frame, t_current-t_begin)
+                        # cf1.attitudeControl(orientation, desOrientation, timeStep, gainVals)
                         print('Added')
 
 
             except ViconDataStream.DataStreamException as e:
                 print('Handled data stream error (Nested)... ERROR:', e)
-        cf1.graphVals()
+                print('cf1 t', cf1.t)
+                print('cf1 omemga_pitch', cf1.omega_pitch)
+        t_last = time.time()
+        cf1.graphPoseVals()
     except ViconDataStream.DataStreamException as e:
         print('Handled data stream error (Global)... ERROR:', e)
