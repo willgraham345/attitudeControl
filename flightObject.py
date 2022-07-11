@@ -7,22 +7,26 @@ We could try and make the x, y, z translation start at 0 and be relative to its 
 """
 class flightObject:
     def __init__(self, orientationMode):
-        self.x = [];
-        self.y = [];
-        self.z = [];
-        self.roll = [];
-        self.pitch = [];
-        self.yaw = [];
+        self.x = []
+        self.y = []
+        self.z = []
+        self.roll = []
+        self.pitch = []
+        self.yaw = []
         self.qx = []
         self.qy = []
         self.qz = []
         self.qw = []
-        self.frame = [];
-        self.t = [];
+        self.frame = []
+        self.t = []
+        self.M1 = 0.0
+        self.M2 = 0.0
+        self.M3 = 0.0
+        self.M4 = 0.0
         if (type(orientationMode) != str):
             raise('orientationMode must be a string (either quaternion or euler)')
         self.orientationMode = orientationMode
-    def addVals(self, XYZ, pose, frame, t):
+    def addPoseVals(self, XYZ, orientation, frame, t):
         X, Y, Z = XYZ
         self.x.append(X)
         self.y.append(Y)
@@ -44,7 +48,7 @@ class flightObject:
         self.t.append(t)
 
 
-    def graphVals(self):
+    def graphPoseVals(self):
         fig, axs = plt.subplots(2,3)
 
         axs[0,0].plot(self.t,self.x)
