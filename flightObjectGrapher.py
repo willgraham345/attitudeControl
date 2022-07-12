@@ -5,7 +5,7 @@ import numpy as np
 IMPROVEMENT IDEAS
 We could try and make the x, y, z translation start at 0 and be relative to its initial position. That wouldn't be too much work and may be helpful later.
 """
-class flightObject:
+class flightObjectGrapher:
     def __init__(self, orientationMode):
         self.x = []
         self.y = []
@@ -121,19 +121,3 @@ class flightObject:
         ax3.set_zlabel('z [mm]')
         ax3.plot(self.x, self.y, self.z)
         plt.show()
-
-
-
-
-
-    def attitudeControl(self, obs_Orientation, desOrientation, timeStep, gainVals):
-        deltaT = self.t[-1] - self.t[-2]
-        omega = obs_orientation
-        [Kp, Kd, Ki] = gainVals
-        [roll_obs, pitch_obs, yaw_obs] = obs_Orientation
-        [roll_des, pitch_des, yaw_des] = desOrientation
-        Tx_des = Kp* (roll_des - roll_obs) + Kd*(0)
-        Ty_des = Kp*(pitch_des - pitch_obs)
-        return Tx_des, Ty_des, Tz_des, T_sum
-
-

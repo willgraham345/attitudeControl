@@ -2,7 +2,7 @@
 from __future__ import print_function
 from vicon_dssdk import ViconDataStream
 import numpy as np
-from flightObject import flightObject
+from flightObjectGrapher import flightObjectGrapher
 import time
 
 # Load constants
@@ -52,11 +52,10 @@ R_BtoA = np.transpose(R_AtoB)
 angularVelocity = np.transpose([0, 0, 0])
 
 t_duration = 5;
-orientationMode = 'euler'
 if __name__ == '__main__':
     # Create instance of python objects, and custom flightobject stuff
     client = ViconDataStream.RetimingClient()
-    cf1 = flightObject(orientationMode)
+    cf1 = flightObjectGrapher('euler')
     try:
         client.Connect("localhost:801")
         print("Vicon is connected...", client.IsConnected())
@@ -88,7 +87,7 @@ if __name__ == '__main__':
                             [(X,Y,Z), occlusion2] = client.GetSegmentGlobalTranslation(subjectName, segmentName)
                             [(q_x, q_y, q_z, q_w), occlusion3] = client.GetSegmentGlobalRotationQuaternion(subjectName, segmentName)
                             XYZ = (X, Y, Z)
-                            orientation = (roll, pitch, yaw)
+                            orientation = (roll, pitch, yaw)21
                         t_current = time.time()
                         cf1.addPoseVals(XYZ, orientation, frame, t_current-t_begin)
                         # cf1.attitudeControl(orientation, desOrientation, timeStep, gainVals)
