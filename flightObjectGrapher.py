@@ -65,8 +65,8 @@ class flightObjectGrapher:
         self.frame.append(frame)
         timeStep = timeVal - self.t[-1]
         self.t.append(timeStep)
-        self.omega_pitch.append((self.pitch[-1] - self.pitch[-2]) / timeStep)
-        print('pitch Velocity', ((self.pitch[-1] - self.pitch[-2]) / timeStep) )
+        # self.omega_pitch.append((self.pitch[-1] - self.pitch[-2]) / timeStep)
+        # print('pitch Velocity', ((self.pitch[-1] - self.pitch[-2]) / timeStep) )
 
 
     def graphPoseVals(self):
