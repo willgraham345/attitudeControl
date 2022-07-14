@@ -1,5 +1,7 @@
 import time
 import csv
+def init_csv(filename, headerNames):
+    # Returns object you wrote with
 def write_csv_header(filename, headerNames):
     with open(filename, 'a') as output:
         writer = csv.writer(output)
@@ -9,6 +11,13 @@ def write_csv_append(filename, dataWrite):
         writer = csv.writer(output, delimiter=",")
         writer.writerow(dataWrite)
     return;
+
+def read_csv_lastLines(filename, n):
+    data = np.array([])
+    with open(filename, 'r') as file:
+        for line in (file.readlines(), [-n:]):
+            print(line)
+
 
 
 if __name__ == "__main__":

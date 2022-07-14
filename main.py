@@ -25,7 +25,6 @@ t_duration = 60
 if __name__ == '__main__':
     # Create instance of python objects, and custom flight object stuff
     client = ViconDataStream.RetimingClient()
-
     try:
         client.Connect("localhost:801")
         print("Vicon is connected...", client.IsConnected())
@@ -37,7 +36,6 @@ if __name__ == '__main__':
         print('X Axis', xAxis, 'Y Axis', yAxis, 'Z Axis', zAxis)
 
         # Create flight control objects, and begin testing time
-        cf1 = flightObjectGrapher('euler')
         cf2 = flightControlObject(m, r, attitudeGains)
         t_begin = time.time()
 
@@ -66,7 +64,6 @@ if __name__ == '__main__':
 
                         ''' Update Pose/attitude stuff'''
                         t_current = time.time()
-                        cf1.addPoseVals(XYZ, orientation, frame, t_current-t_begin)
                         cf2.getCurrentPose(orientation, time.time()-t_begin)
                         # cf1.attitudeControl(orientation, desOrientation, timeStep, gainVals)
                         print('Added')
