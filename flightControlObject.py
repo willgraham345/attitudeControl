@@ -83,7 +83,7 @@ if __name__ == '__main__':
     attitudeGains = np.vstack((roll_AttitudeGains, pitch_AttitudeGains, yaw_AttitudeGains))
     obj1 = flightControlObject(.1, .1, attitudeGains)
     obj1.getCurrentPose([.01, .01, .01], time.time())
-    # obj1.writeThrustVals(np.ones(4), np.zeros(4))
+    obj1.writeThrustVals(np.ones(4), np.zeros(4))
     # obs_Orientation = np.array([10, 30, 0])
     # des_Orientation = np.array([0, 0, 0])
     # timeStep = 1 / 250

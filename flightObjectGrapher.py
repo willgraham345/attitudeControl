@@ -6,6 +6,7 @@ IMPROVEMENT IDEAS
 We could try and make the x, y, z translation start at 0 and be relative to its initial position. That wouldn't be too much work and may be helpful later.
 """
 class flightObjectGrapher:
+
     def __init__(self, orientationMode):
         self.x = []
         self.y = []
@@ -22,11 +23,11 @@ class flightObjectGrapher:
         self.qw = []
         self.frame = []
         self.t = []
-        self.M1 = 0.0
-        self.M2 = 0.0
-        self.M3 = 0.0
-        self.M4 = 0.0
-        self.desOrientation = []
+        self.T1 = []
+        self.T2 = []
+        self.T3 = []
+        self.T4 = []
+        self.desOrientation = np.zeros(10)
         if (type(orientationMode) != str):
             raise('orientationMode must be a string (either quaternion or euler)')
         self.orientationMode = orientationMode
@@ -42,6 +43,36 @@ class flightObjectGrapher:
             self.omega_yaw.append(0.0)
             self.t.append(0.0)
             # self.qx.append(0.0) NEEDS SUPPORT FOR QUATERNIONS
+    def addThrusterVals(self, ThrustVals):
+        [T1, T2, T3, T4] = ThrustVals
+        self.T1.append(T1)
+        self.T2.append(T2)
+        self.T3.append(T3)
+        self.T4.append(T4)
+
+    def graphThrusterVals(self):
+        fig, axs = plt.subplots(2,2)
+        axs[0,0].plot(self.t, self.T1)
+        axs[0, 0].set_title('Thruster 1 Vals')
+        axs[0,0].set_xlabel('Time')
+        axs[0,0].set_ylabel('Force?')
+
+
+        axs[0,1].plot(self.t, self.T2)
+        axs[0,1].set_title('Thruster 2 Vals')
+        axs[0,1].set_xlabel('Time')
+        axs[0,1].set_ylabel('Force?')
+
+        axs[1, 0].plot(self.t, self.T3)
+        axs[1, 0].set_title('Thruster 3 Vals')
+        axs[1, 0].set_xlabel('Time')
+        axs[1, 0].set_ylabel('Force?')
+
+        axs[1, 1].plot(self.t, self.T4)
+        axs[1, 1].set_title('Thruster 4 Vals')
+        axs[1, 1].set_xlabel('Time')
+        axs[1, 1].set_ylabel('Force?')
+
 
 
     def addPoseVals(self, XYZ, orientation, frame, timeVal):
@@ -67,7 +98,6 @@ class flightObjectGrapher:
         self.t.append(timeStep)
         # self.omega_pitch.append((self.pitch[-1] - self.pitch[-2]) / timeStep)
         # print('pitch Velocity', ((self.pitch[-1] - self.pitch[-2]) / timeStep) )
-
 
     def graphPoseVals(self):
         fig, axs = plt.subplots(2,3)
