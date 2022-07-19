@@ -7,7 +7,7 @@ We could try and make the x, y, z translation start at 0 and be relative to its 
 """
 class flightObjectGrapher:
 
-    def __init__(self, orientationMode):
+    def __init__(self):
         self.x = []
         self.y = []
         self.z = []
@@ -23,85 +23,35 @@ class flightObjectGrapher:
         self.qw = []
         self.frame = []
         self.t = []
+        self.sampleTime = []
         self.T1 = []
         self.T2 = []
         self.T3 = []
         self.T4 = []
-        self.desOrientation = np.zeros(10)
-        if (type(orientationMode) != str):
-            raise('orientationMode must be a string (either quaternion or euler)')
-        self.orientationMode = orientationMode
-        for i in range(0,2):
-            self.x.append(0.0)
-            self.y.append(0.0)
-            self.z.append(0.0)
-            self.roll.append(0.0)
-            self.pitch.append(0.0)
-            self.yaw.append(0.0)
-            self.omega_roll.append(0.0)
-            self.omega_pitch.append(0.0)
-            self.omega_yaw.append(0.0)
-            self.t.append(0.0)
-            # self.qx.append(0.0) NEEDS SUPPORT FOR QUATERNIONS
     def addThrusterVals(self, ThrustVals):
         [T1, T2, T3, T4] = ThrustVals
         self.T1.append(T1)
         self.T2.append(T2)
         self.T3.append(T3)
         self.T4.append(T4)
-
-    def graphThrusterVals(self):
-        fig, axs = plt.subplots(2,2)
-        axs[0,0].plot(self.t, self.T1)
-        axs[0, 0].set_title('Thruster 1 Vals')
-        axs[0,0].set_xlabel('Time')
-        axs[0,0].set_ylabel('Force?')
-
-
-        axs[0,1].plot(self.t, self.T2)
-        axs[0,1].set_title('Thruster 2 Vals')
-        axs[0,1].set_xlabel('Time')
-        axs[0,1].set_ylabel('Force?')
-
-        axs[1, 0].plot(self.t, self.T3)
-        axs[1, 0].set_title('Thruster 3 Vals')
-        axs[1, 0].set_xlabel('Time')
-        axs[1, 0].set_ylabel('Force?')
-
-        axs[1, 1].plot(self.t, self.T4)
-        axs[1, 1].set_title('Thruster 4 Vals')
-        axs[1, 1].set_xlabel('Time')
-        axs[1, 1].set_ylabel('Force?')
-
-
-
-    def addPoseVals(self, XYZ, orientation, frame, timeVal):
+    def addPoseVals(self, XYZ, orientation, omega, frame, t_current):
         X, Y, Z = XYZ
+        roll, pitch, yaw = orientation
+        omega_roll, omega_pitch, omega_yaw = omega
         self.x.append(X)
         self.y.append(Y)
         self.z.append(Z)
-        if (self.orientationMode == 'euler'):
-            roll, pitch, yaw = orientation
-            self.roll.append(roll)
-            self.pitch.append(pitch)
-            self.yaw.append(yaw)
-        elif(self.orientationMode == 'quaternion'):
-            qx, qy, qz, qw = orientation
-            self.qx.append(qx)
-            self.qy.append(qy)
-            self.qz.append(qz)
-            self.qw.append(qw)
-        else:
-            raise('Errors with orientationMode entry')
         self.frame.append(frame)
-        timeStep = timeVal - self.t[-1]
-        self.t.append(timeStep)
-        # self.omega_pitch.append((self.pitch[-1] - self.pitch[-2]) / timeStep)
-        # print('pitch Velocity', ((self.pitch[-1] - self.pitch[-2]) / timeStep) )
+        self.t.append(t_current)
+        self.roll.append(roll)
+        self.pitch.append(pitch)
+        self.yaw.append(yaw)
+        self.omega_roll.append(omega_roll)
+        self.omega_pitch.append(omega_pitch)
+        self.omega_yaw.append(omega_yaw)
 
-    def graphPoseVals(self):
+    def showGraphs(self):
         fig, axs = plt.subplots(2,3)
-
         axs[0,0].plot(self.t,self.x)
         axs[0,0].set_title('X')
         axs[0,0].set_xlabel('time')
@@ -116,38 +66,55 @@ class flightObjectGrapher:
         axs[0,2].set_title('Z')
         axs[0,2].set_xlabel('time')
         axs[0,2].set_ylabel('displacement (mm)')
-        if (self.orientationMode == 'euler'):
-            axs[1, 0].plot(self.t, self.roll)
-            axs[1, 0].set_title('Roll')
-            axs[1, 0].set_xlabel('time')
-            axs[1, 0].set_ylabel('displacement (rad)')
+        axs[1, 0].plot(self.t, self.roll)
+        axs[1, 0].set_title('Roll')
+        axs[1, 0].set_xlabel('time')
+        axs[1, 0].set_ylabel('displacement (rad)')
 
-            axs[1, 1].plot(self.t, self.pitch)
-            axs[1, 1].set_title('Pitch')
-            axs[1, 1].set_xlabel('time')
-            axs[1, 1].set_ylabel('displacement (rad)')
+        axs[1, 1].plot(self.t, self.pitch)
+        axs[1, 1].set_title('Pitch')
+        axs[1, 1].set_xlabel('time')
+        axs[1, 1].set_ylabel('displacement (rad)')
 
-            axs[1, 2].plot(self.t, self.yaw)
-            axs[1, 2].set_title('Yaw')
-            axs[1, 1].set_xlabel('time')
-            axs[1, 2].set_ylabel('displacement (rad)')
-        elif(self.orientationMode == 'quaternion'):
-            print("visualization for quaternions not yet supported (or understood) by our good friend Will")
-        # for i in range(len(self.t)):
-        #     samplingRate[i] = self.t(i) - self.t(i)
+        axs[1, 2].plot(self.t, self.yaw)
+        axs[1, 2].set_title('Yaw')
+        axs[1, 1].set_xlabel('time')
+        axs[1, 2].set_ylabel('displacement (rad)')
 
-        # plt.show()
-        fig2, ax2 = plt.subplots()
-        ax2.plot(self.t, self.t)
-        ax2.set_title('Sampling Rate vs Time')
-        ax2.set_xlabel('Time')
-        ax2.set_ylabel('Sampling Rate')
+        fig1, axs1 = plt.subplots(2, 2)
+        axs1[0, 0].plot(self.t, self.T1)
+        axs1[0, 0].set_title('Thruster 1 Vals')
+        axs1[0, 0].set_xlabel('Time')
+        axs1[0, 0].set_ylabel('Force?')
 
+        axs1[0, 1].plot(self.t, self.T2)
+        axs1[0, 1].set_title('Thruster 2 Vals')
+        axs1[0, 1].set_xlabel('Time')
+        axs1[0, 1].set_ylabel('Force?')
 
-        fig3 = plt.figure()
-        ax3 = fig3.gca(projection = '3d')
-        ax3.set_xlabel('x [mm]')
-        ax3.set_ylabel('y [mm]')
-        ax3.set_zlabel('z [mm]')
-        ax3.plot(self.x, self.y, self.z)
+        axs1[1, 0].plot(self.t, self.T3)
+        axs1[1, 0].set_title('Thruster 3 Vals')
+        axs1[1, 0].set_xlabel('Time')
+        axs1[1, 0].set_ylabel('Force?')
+
+        axs1[1, 1].plot(self.t, self.T4)
+        axs1[1, 1].set_title('Thruster 4 Vals')
+        axs1[1, 1].set_xlabel('Time')
+        axs1[1, 1].set_ylabel('Force?')
+
+        fig2 = plt.figure()
+        ax2 = fig2.gca(projection = '3d')
+        ax2.set_title('XYZ 3d Projection')
+        ax2.set_xlabel('x [mm]')
+        ax2.set_ylabel('y [mm]')
+        ax2.set_zlabel('z [mm]')
+        ax2.plot(self.x, self.y, self.z)
+        print('length of t', len(self.t))
+        for i in range(0, len(self.t) - 2):
+            self.sampleTime.append(np.subtract(self.t[i + 1], self.t[i]))
+        fig4, ax4 = plt.subplots()
+        ax4.plot(range(0, len(self.t)-2), self.sampleTime)
+        ax4.set_title('Sampling Rate vs Time')
+        ax4.set_xlabel('Time')
+        ax4.set_ylabel('Sampling Rate')
         plt.show()
