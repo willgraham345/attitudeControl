@@ -16,12 +16,12 @@ m = 60e-6      # [kg], body mass  Changed from 10e-6 9/5/2017    5-e-6 is with I
 r = 1e-3 #[m]
 
 
-roll_AttitudeGains = [0.005, .0, 0]  # Kp, Kd, Ki
-pitch_AttitudeGains = [0.005, .0, 0]  # Kp, Kd, Ki Good starting point
+roll_AttitudeGains = [0.5, .005, 0]  # Kp, Kd, Ki
+pitch_AttitudeGains = [0.5, .005, 0]  # Kp, Kd, Ki Good starting point
 yaw_AttitudeGains = [0, 0, 0]  # Kp, Kd, Ki NO YAW CONTROL IN THIS LOOP
 attitudeGains = np.vstack((roll_AttitudeGains, pitch_AttitudeGains, yaw_AttitudeGains))
 
-t_duration = 4
+t_duration = 6
 orientation_des = np.array([0, 0, 0])
 if __name__ == '__main__':
     # Create instance of python objects, and custom flight object stuff
