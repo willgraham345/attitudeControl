@@ -75,9 +75,25 @@ class flightControlObject:
         # print('rollgains[0]: ', self.roll_gains[0], type(self.roll_gains[0]))
         # print('pitchgains: ', self.pitch_gains, type(self.pitch_gains))
         # print(self.yaw_gains)
+        timeStep = self.t_new - self.t # Calculates difference in time between last step and this step
 
-        Tau_x_des = self.roll_gains[0]*(roll_des - roll_obs) + self.roll_gains[1]*(self.omega_new[1])
-        Tau_y_des = self.pitch_gains[0]*(pitch_des - pitch_obs) + self.pitch_gains[2]*(self.omega_new[2])
+        self.error_roll_new = roll_des - roll_obs # Proportional error
+        self.error_pitch_new = pitch_des - pitch_obs
+        self.error_yaw_new = pitch_des - pitch_obs
+
+
+        self.error_new = orientation_des - self.orientation
+        self.errorDt = np.subtract(self.error_new, self.error) / (self.t_new - self.t)
+
+
+
+        # Kept in case the above errors don't compile correctly
+        # self.errorDt_roll = (error_roll_new - error_roll) / (self.t_new - self.t) # Rate of change of the error (derivative portion)
+        # self.errorDt_pitch = (error_pitch_new - error_pitch) / (self.t_new - self.t)
+        # self.errorDt_yaw = (error_yaw_new - error_yaw) / (self.t_new - self.t)
+
+        Tau_x_des = self.roll_gains[0]*(self.error_new[0]) + self.roll_gains[1]*(self.errorDt[0])
+        Tau_y_des = self.pitch_gains[0]*(self.error_new[1]) + self.pitch_gains[2]*(self.errorDt[0])
         Tau_z_des = 0
         T_sum_des = self.m*9.81 # Hover input
         self.torquesDes = np.array([T_sum_des, Tau_x_des, Tau_y_des, Tau_z_des])
@@ -91,6 +107,8 @@ class flightControlObject:
         self.orientation = self.orientation_new
         self.t = self.t_new
         self.omega = self.omega_new
+        self.error = self.error_new
+
 
         # print('torques_desVec = ', torques_desVec)
 
