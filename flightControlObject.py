@@ -1,6 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import time
+from PWMController import PWMController
+import serial
+import datetime
 
 """
 IMPROVEMENT IDEAS
@@ -109,8 +112,19 @@ class flightControlObject:
         self.omega = self.omega_new
         self.error = self.error_new
 
-
+    def initPWM(self):
+        self.tied_device = None # I'm REALLY confused with this part of it. No idea what's going on here.
+        com = self.tied_device.serial_port
+        self.port = serial.Serial(com, 115200, timeout=1)
+        self.tied_device.port = self.port
+        self.pwm_cntrl = PWMController(self.port)
         # print('torques_desVec = ', torques_desVec)
+    def zeroPWM(self):
+        self.pwm_cntrl.setPWM(0)
+    def fullPWM(self):
+        self.pwm_cntrl.setPWM(100)
+
+
 
 
 
@@ -121,8 +135,8 @@ if __name__ == '__main__':
     yaw_gains = [0, 0, 0]  # Kp, Kd, Ki NO YAW CONTROL IN THIS LOOP
     attitudeGains = np.vstack((roll_gains, pitch_gains, yaw_gains))
     obj1 = flightControlObject(.1, .1, attitudeGains)
-    obj1.getCurrentPose([.01, .01, .01])
-    obj1.findAndWriteDesiredTorques(np.zeros(3))
+    # obj1.getCurrentPose([.01, .01, .01])
+    # obj1.findAndWriteDesiredTorques(np.zeros(3))
     # obj1.writeThrustVals(np.ones(4), np.zeros(4))
     # obs_Orientation = np.array([10, 30, 0])
     # des_Orientation = np.array([0, 0, 0])
@@ -131,3 +145,5 @@ if __name__ == '__main__':
     # print("obs_Orientation", obs_Orientation)
     # print("des_Orientation", des_Orientation)
     # obj1.findDesiredTorques(obs_Orientation, des_Orientation, timeStep, gainVals)
+    obj1.initPWM()
+
