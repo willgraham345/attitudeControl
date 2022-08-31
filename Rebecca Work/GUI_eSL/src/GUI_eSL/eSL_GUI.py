@@ -9,16 +9,16 @@ from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel, QPushButton, QMainWind
 from PyQt5.QtGui import QFont, QDoubleValidator, QIntValidator
 import sys
 import os
-# from StageWidget import XYStageWidget
+from StageWidget import XYStageWidget
 from PyQt5.QtCore import QSize, QTimer, Qt
 from serial.tools import list_ports
-# from device_definitions import Device
-# from indicatorLight import IndicatorLight
+from device_definitions import Device
+from indicatorLight import IndicatorLight
 from PyQt5.QtCore import QSize, QTimer, Qt, pyqtSignal
 from tkinter import filedialog
-# from GUI_supporting_functions import Element, ForceSensorWidget
+from GUI_supporting_functions import Element, ForceSensorWidget
 import tkinter as tk
-# from ScopeWidget import OscilloscopeWidget
+from ScopeWidget import OscilloscopeWidget
 import csv
 import time
 import matplotlib.pyplot as plt
