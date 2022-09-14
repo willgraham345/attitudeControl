@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import time
-from PWMController import PWMController
+from arduinoControl import PWMController
 import serial
 import datetime
 
