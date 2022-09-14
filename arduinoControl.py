@@ -7,13 +7,13 @@ Created on Fri Jul  8 12:03:38 2022
 
 
 import serial
+import time
 
-
-class PWMController():
-    def __init__(self,serial_handle):
-        self.ser = serial_handle
+class arduinoControl(port, baudrate, timeout):
+    def __init__(self):
+        self.serialObj  = serial.Serial(port = portGiven, baudrate, timeout)
     
-    def close(self): 
+    def (self):
         self.setPWM(100)
         self.ser.close()
         
