@@ -4,11 +4,14 @@ from vicon_dssdk import ViconDataStream
 from initialize import initializeParameters
 from customViconFNs import connectToVicon, viconLoop
 import time
+from SpellmanHvSupply import  SpellmanHVSupply
 
 if __name__ == '__main__':
     thruster1, thruster1_grapher, t_duration, orientation_des = initializeParameters()
     # Create instance of python objects, and custom flight object stuff
     client = ViconDataStream.RetimingClient() # initializing vicon connection
+    HVSupply =  SpellmanHVSupply()  #creating instance of HV supply, (not yet tested)
+
     try:
         connectToVicon(client)
         print("Program begin")
@@ -19,7 +22,7 @@ if __name__ == '__main__':
             # Create flight control objects, and begin testing time
             XYZ, orientation, success = viconLoop(client)
             if (success == False):
-                pass# do nothign
+                pass #do nothing
             else:
                 ''' Update Pose/attitude stuff'''
                 thruster1.getCurrentPose(orientation)
