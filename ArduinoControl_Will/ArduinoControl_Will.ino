@@ -6,7 +6,7 @@
 // * is used as the data string delimiter
 // , is used to delimit individual data
 
-String msgReceived; //main captured String
+String msgReceived; //main captured String    
 const int max_msg_len = 3;
 //const char delim ;
 long unsigned int a, b, c, d;
