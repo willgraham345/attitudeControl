@@ -36,15 +36,18 @@ def getVals():
     arduinoData = ser.readline().decode('ascii')
     return arduinoData
 
+a = 1; b = 2; c = 3; d = 4;
 
-array = [1, 2, 3, 4]
-array_bytes = bytearray(array)
+n
+dict =
+
+byteString = bytes(a d)
 if __name__ == "__main__":
     while True:
         bytesWritten = ser.write(array_bytes)
         print('bytesWritten: ', bytesWritten)
 
-        time.sleep(.1)
+        time.sleep(1)
         arduinoData = ser.readline().decode('ascii')
         print('type: ', type(arduinoData))
         # print('thing', arduinoData[0])
