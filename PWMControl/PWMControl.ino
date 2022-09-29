@@ -32,7 +32,7 @@ void setup() {
   pinMode(M3_pin, OUTPUT);
   pinMode(M4_pin, OUTPUT);
 
-  cli();
+  cli(); //retimes Arudino's clock to operate around what we want... right?
   TCCR1A = 0;
   TCCR1B = 0;
   OCR1A = reload;
