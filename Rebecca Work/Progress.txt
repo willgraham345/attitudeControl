@@ -1,5 +1,0 @@
-Progress in diagnosing the HV Supply
-- Figured out that the connection is in Control Panel> Network+Internet>NetworkConnections(access this by clicking Change adapter settings)
-- IP addresses I THINK are 192.168.10.61 w/255.255.255.0 subnet.
-	- No idea what the default gateway is, but it pops up with an error if that doesn't match the IP address for IPv4
-- The only things I can change are the IPv4 and IPv6 fields within the network connections

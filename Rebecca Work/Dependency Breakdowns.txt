@@ -1,7 +1,0 @@
-Dependencies I don't have...
-- StageWidget (no module error)
-- device_definitions (no module error)
-- indicatorLight (no module error)
-- GUI_supporting_functions (no module error)
-- ScopeWidget/OscilloscopeWidget (no module error)
-- Changed "import visa" to "import pyvisa" (this fixed the error, just wanted to make sure that's what you wanted to import)
