@@ -21,7 +21,7 @@ def viconLoop(client):
         for subjectName in subjectNames:
             segmentNames = client.GetSegmentNames(subjectName)
             for segmentName in segmentNames:
-                print(segmentName)
+                # print(segmentName)
                 # print('current time = ', t_current)
 
                 ''' Get data from VICON'''

@@ -22,7 +22,7 @@ attitudeGains = np.vstack((roll_AttitudeGains, pitch_AttitudeGains, yaw_Attitude
 t_duration = 6
 orientation_des = np.array([0, 0, 0])
 
-def initializeParameters():
+def initializeFlightObjects():
 
     roll_AttitudeGains = [0.5, .005, 0]  # Kp, Kd, Ki
     pitch_AttitudeGains = [0.5, .005, 0]  # Kp, Kd, Ki Good starting point

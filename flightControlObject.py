@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import time
-from arduinoControl import PWMController
+# from arduinoControl import PWMController
 import serial
 import datetime
 
@@ -35,6 +35,11 @@ class flightControlObject:
         self.t_new = time.time() #[s]
         self.frame = []
 
+        # not sure if this is a good idea to implement
+        self.error = []
+        self.errorDt = []
+        self.error_new = []
+
         self.torquesDes = np.zeros(4)
 
         # Create A Matrix for Attitude control
@@ -52,7 +57,7 @@ class flightControlObject:
         # print("A Matrix units are [N]")
     def updateFrame(self, frame):
         self.frame = frame
-        print('selfFrame = ', self.frame, type(self.frame))
+        # print('selfFrame = ', self.frame, type(self.frame))
     def setTimeBegin(self):
         self.t = time.time()
         a = time.time()
